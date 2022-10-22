@@ -43,14 +43,14 @@ function validate {
 ### fetch clusterversion details
 function clusterversion {
 
-	omg get clusterversion
+	omg get clusterversion 2> /dev/null
 }
 
 
 ### Degraded operators
 function DegradedOperators {
 
-	DegradedOperatorsNames=$(omg get co | awk '$3!="True"||$4!="False"||$5!="False"')
+	DegradedOperatorsNames=$(omg get co 2> /dev/null | awk '$3!="True"||$4!="False"||$5!="False"')
 	LineCount=$(echo "$DegradedOperatorsNames" | wc -l)
 	if [ $LineCount -eq 1 ];
 	then
@@ -65,7 +65,7 @@ function DegradedOperators {
 ### Degraded nodes status
 function DegradedNodes {
 
-	DegradedNodesNames=$(omg get nodes -o wide | awk '$2!="Ready"')
+	DegradedNodesNames=$(omg get nodes -o wide 2> /dev/null | awk '$2!="Ready"')
 	LineCount=$(echo "$DegradedNodesNames" | wc -l)
 	if [ $LineCount -eq 1 ];
 	then
@@ -80,7 +80,7 @@ function DegradedNodes {
 ### Degraded node description
 function DegradedNodesDescription {
 
-	DegradedNodesName=$(omg get nodes | grep -i 'NotReady\|SchedulingDisabled' | awk '{ print $1 }' | tr '\n' ' ')
+	DegradedNodesName=$(omg get nodes 2> /dev/null | grep -i 'NotReady\|SchedulingDisabled' | awk '{ print $1 }' | tr '\n' ' ')
 	if [ -z "$DegradedNodesName" ];
 	then
 		echo -e "\n${PURPLE}Not required as all nodes are in Ready state!\n${REGULAR}"
@@ -103,7 +103,7 @@ function DegradedNodesDescription {
 ### pods not in Running or Succeeded state
 function pods {
 
-	Pods=$(omg get pod -o wide -A | grep -Ev 'Running|Succeeded')
+	Pods=$(omg get pod -o wide -A 2> /dev/null | grep -Ev 'Running|Succeeded')
 	LineCount=$(echo "$Pods" | wc -l)
 	if [ $LineCount -eq 1 ];
 	then
@@ -118,13 +118,13 @@ function pods {
 ### machine-config-daemon pod logs for degraded nodes
 function MCDPodLogs {
 
-	DegradedNodesName=$(omg get nodes | grep -i 'NotReady\|SchedulingDisabled' | awk '{ print $1 }' | tr '\n' ' ')
+	DegradedNodesName=$(omg get nodes 2> /dev/null | grep -i 'NotReady\|SchedulingDisabled' | awk '{ print $1 }' | tr '\n' ' ')
 	if [ -z "$DegradedNodesName" ];
 	then
 		echo -e "\n${PURPLE}Not required as all nodes are in Ready state!\n${REGULAR}"
 	else
 		for i in $(echo $DegradedNodesName); do
-			MCDPods=$(omg get pod -o wide -n openshift-machine-config-operator | grep -i $i | awk '{ print $1 }')
+			MCDPods=$(omg get pod -o wide -n openshift-machine-config-operator 2> /dev/null | grep -i $i | awk '{ print $1 }')
 			if [ -f $MUSTGATHER/*/namespaces/openshift-machine-config-operator/pods/$MCDPods/machine-config-daemon/machine-config-daemon/logs/current.log ] && [ -s $MUSTGATHER/*/namespaces/openshift-machine-config-operator/pods/$MCDPods/machine-config-daemon/machine-config-daemon/logs/current.log ];
 			then
 				echo -e "\n${PURPLE}***$MCDPods pod logs for degraded $i node***\n${REGULAR}"
