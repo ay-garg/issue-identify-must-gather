@@ -2,16 +2,17 @@
 This script analyze the OpenShift 4 must-gather to identify the issues.
 
 ## The shell script fetches following data from the must-gather.
+- clusterversion
+- Degraded Operators
 - Degraded Nodes
 - Description of Degraded Nodes
-- machine-config-daemon pod status for degraded nodes
+- Pods not in Running state
 - machine-config-daemon pod logs for degraded nodes
 
 ## Prerequisites
 ```
 - Cluster must-gather
-- "omg" and "jq" packages installed
-- "util-linux" and "bsdmainutils" packages installed for Red Hat and Debian based Linux Distributions respectively.
+- "o-must-gather" python module installed for "omg" command.
 ```
 ## How to use the shell script?
 ```
