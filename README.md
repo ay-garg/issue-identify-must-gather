@@ -4,6 +4,9 @@ This script analyze the OpenShift 4 must-gather to identify the issues.
 ## The shell script fetches following data from the must-gather.
 - clusterversion
 - Degraded Operators
+- Description of Degraded Operators
+- Degraded machine-config-pool
+- Description of Degraded machine-config-pool
 - Degraded Nodes
 - Description of Degraded Nodes
 - Pods not in Running state
