@@ -62,6 +62,55 @@ function DegradedOperators {
 }
 
 
+### Degraded operators description
+function DegradedOperatorsDescription {
+
+	DegradedOperatorsNamesOneLine=$(omg get co 2> /dev/null | awk '$3!="True"||$4!="False"||$5!="False"' | awk '{ print $1 }' | grep -Ev NAME)
+	if [ -z "$DegradedOperatorsNamesOneLine" ]
+	then
+		echo -e "\n${PURPLE}Not required as all operators are available!\n${REGULAR}"
+	else
+		for i in $(echo $DegradedOperatorsNamesOneLine); do
+			echo -e "\n${PURPLE}***$i operator description***\n${REGULAR}"
+			omg get co $i -o yaml 2> /dev/null
+		done
+	fi
+
+}
+
+
+### Degraded MCPs
+function DegradedMCP {
+
+	DegradedMCP=$(omg get mcp 2> /dev/null | awk '$3!="True"||$4!="False"||$5!="False"')
+	LineCount=$(echo "$DegradedMCP" | wc -l)
+	if [ $LineCount -eq 1 ];
+	then
+		echo -e "\n${PURPLE}No machine-config-pool degraded!\n${REGULAR}"
+	else
+		echo "$DegradedMCP"
+	fi
+
+}
+
+
+### Degraded MCPs description
+function DegradedMCPDescription {
+
+	DegradedMCPDescription=$(omg get mcp 2> /dev/null | awk '$3!="True"||$4!="False"||$5!="False"' | awk '{ print $1 }' | grep -Ev NAME)
+	if [ -z "$DegradedMCPDescription" ]
+	then
+		echo -e "\n${PURPLE}Not required as all machine-config-pool are available!\n${REGULAR}"
+	else
+		for i in $(echo $DegradedMCPDescription); do
+			echo -e "\n${PURPLE}***$i machine-config-pool description***\n${REGULAR}"
+			omg get mcp $i -o yaml 2> /dev/null
+		done
+	fi
+
+}
+
+
 ### Degraded nodes status
 function DegradedNodes {
 
@@ -154,6 +203,15 @@ function main {
 
 	title "Degraded Operators"
 	DegradedOperators
+
+	title "Degraded Operators Description"
+	DegradedOperatorsDescription
+
+	title "Degraded machine-config-pool"
+	DegradedMCP
+
+	title "Degraded machine-config-pool description"
+	DegradedMCPDescription
 
 	title "Degraded Nodes"
 	DegradedNodes
