@@ -27,7 +27,7 @@ $ issue-identify-must-gather.sh <path-to-must-gather-dir>
 
 // All the sensitive data is masked in the below script output for security reasons.
 $ issue-identify-must-gather ./must-gather/must-gather.local.39xxxxxxxxxxxx/
-Using:  /home/root/test/must-gather/must-gather.local.39xxxxxxxxxxxx/quay-io-openshift-release-dev-ocp-v4-0-art-dev-sha256-4922dxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Using:  /home/test/must-gather/must-gather.local.39xxxxxxxxxxxx/quay-io-openshift-release-dev-ocp-v4-0-art-dev-sha256-4922dxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 
