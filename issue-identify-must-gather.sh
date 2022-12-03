@@ -126,6 +126,38 @@ function DegradedNodes {
 }
 
 
+### Machines not in Running state
+function MachinePhase {
+
+	DegradedMachines=$(omg get machine -n openshift-machine-api 2> /dev/null | awk '$2!="Running"')
+	LineCount=$(echo "$DegradedMachines" | wc -l)
+	if [ $LineCount -eq 1 ];
+	then
+		echo -e "\n${PURPLE}Either all machines are Running fine or it's a BareMetal UPI cluster where machine-api doesn't come!\n${REGULAR}"
+	else
+		echo "$DegradedMachines"
+	fi
+
+}
+
+
+### Degraded Machines Description
+function DegradedMachinesDescription {
+
+	DegradedMachinesNamesOneLine=$(omg get machine -n openshift-machine-api 2> /dev/null | awk '$2!="Running"' | awk '{ print $1 }' | grep -Ev NAME)
+	if [ -z "$DegradedMachinesNamesOneLine" ]
+	then
+		echo -e "\n${PURPLE}Not required as all machines are Running fine or it's a BareMetal UPI cluster where machine-api doesn't come!\n${REGULAR}"
+	else
+		for i in $(echo $DegradedMachinesNamesOneLine); do
+			echo -e "\n${PURPLE}***$i machine description***\n${REGULAR}"
+			omg get machine $i -n openshift-machine-api -o yaml 2> /dev/null
+		done
+	fi
+
+}	
+
+
 ### Degraded node description
 function DegradedNodesDescription {
 
@@ -212,6 +244,12 @@ function main {
 
 	title "Degraded machine-config-pool description"
 	DegradedMCPDescription
+
+	title "Machines not in Running state"
+	MachinePhase
+
+	title "Degraded Machines Description"
+	DegradedMachinesDescription
 
 	title "Degraded Nodes"
 	DegradedNodes
